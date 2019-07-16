@@ -27,7 +27,7 @@ node('testing-jnlp') {
     }
     stage('Deploy') {
         echo "5. Deploy Stage"
-        if (env.BRANCH_NAME == 'qar') {
+        if (env.BRANCH_NAME == 'qa') {
             input "确认要部署QA环境吗？"
         }
         sh "sed -i 's#<BUILD_TAG>#${build_tag}#' k8s.yaml"
