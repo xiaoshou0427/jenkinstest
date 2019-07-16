@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkins-demo
-  namespace: default
+  name: jenkins-demo-qa
+  namespace: qa
 spec:
   selector:
     matchLabels:
-      app: jenkins-demo
+      app: jenkins-demo-qa
   template:
     metadata:
       labels:
-        app: jenkins-demo
+        app: jenkins-demo-qa
     spec:
       containers:
       - image: xiaoshou0427/jenkins-demo:<BUILD_TAG>
         imagePullPolicy: IfNotPresent
-        name: jenkins-demo
+        name: jenkins-demo-qa
         env:
         - name: branch
           value: <BRANCH_NAME>
