@@ -1,4 +1,4 @@
-node('haimaxy-jnlp') {
+node('testing-jnlp') {
     stage('Prepare') {
         echo "1.Prepare Stage"
         checkout scm
@@ -11,16 +11,18 @@ node('haimaxy-jnlp') {
     }
     stage('Test') {
       echo "2.Test Stage"
+      echo "${build_tag}"
+      println "${env.BRANCH_NAME}"
     }
     stage('Build') {
         echo "3.Build Docker Image Stage"
-        sh "docker build -t cnych/jenkins-demo:${build_tag} ."
+        sh "docker build -t xiaoshou0427/jenkins-demo:${build_tag} ."
     }
     stage('Push') {
         echo "4.Push Docker Image Stage"
         withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
             sh "docker login -u ${dockerHubUser} -p ${dockerHubPassword}"
-            sh "docker push cnych/jenkins-demo:${build_tag}"
+            sh "docker push xiaoshou0427/jenkins-demo:${build_tag}"
         }
     }
     stage('Deploy') {
@@ -28,7 +30,7 @@ node('haimaxy-jnlp') {
         if (env.BRANCH_NAME == 'master') {
             input "确认要部署线上环境吗？"
         }
-        sh "sed -i 's/<BUILD_TAG>/${build_tag}/' k8s.yaml"
+        sh "sed -i 's#<BUILD_TAG>#${build_tag}#' k8s.yaml"
         sh "sed -i 's/<BRANCH_NAME>/${env.BRANCH_NAME}/' k8s.yaml"
         sh "kubectl apply -f k8s.yaml --record"
     }
