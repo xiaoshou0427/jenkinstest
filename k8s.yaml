@@ -13,6 +13,8 @@ spec:
         app: jenkins-demo-qa
     spec:
       containers:
+      imagePullSecrets:
+      - name: regcred
       - image: xiaoshou0427/jenkins-demo:<BUILD_TAG>
         imagePullPolicy: IfNotPresent
         name: jenkins-demo-qa
